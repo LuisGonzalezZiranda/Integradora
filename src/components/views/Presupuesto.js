@@ -1,0 +1,135 @@
+import React, { useState, useContext } from 'react';
+import { Container, Form, Button, Nav } from 'react-bootstrap';
+import { AuthContext } from "../../Auth.js";
+import { addDocument } from '../commun/actions';
+import { firebaseApp } from '../../firebase';
+import { Navigate } from "react-router";
+
+function Presupuesto() {
+  const [navegacion, setPresupuesto] = useState([])
+  const [encabezado, setPresupuesto2] = useState([])
+  const [body, setPresupuesto3] = useState([])
+  const [footer, setPresupuesto4] = useState([])
+  const [baseDeDatos, setPresupuesto5] = useState([])
+  const [framework, setPresupuesto6] = useState([])
+  const [hosting, setPresupuesto7] = useState([])
+  const [error, setError] = useState(null)
+
+  const usuario = firebaseApp.auth().currentUser;
+  const navegacionN = Number(navegacion)
+  const encabezadoN = Number(encabezado)
+  const bodyN = Number(body)
+  const footerN = Number(footer)
+  const datosN = Number(baseDeDatos)
+  const frameworkN = Number(framework)
+  const hostingN = Number(hosting)
+
+  const total = navegacionN + encabezadoN + bodyN + footerN + datosN + frameworkN + hostingN;
+  const addTask = async (e) => {
+    e.preventDefault()
+    const result = await addDocument("presupuesto", { basedatos: datosN, body: bodyN, correo: usuario.email, creado: Date(), encabezado: encabezadoN, footer: footerN, framework: frameworkN, hosting: hostingN, navegacion: navegacionN, nombre: usuario.displayName, total: total })
+    if (!result.statusResponse) {
+      setError(result.error)
+      console.log(setError)
+      console.log(usuario.email)
+      console.log(usuario)
+      return
+    }
+  }
+
+  const { currentUser } = useContext(AuthContext);
+
+  if (!currentUser) {
+    return <Navigate to="/login" />;
+  }
+
+  return (
+    <div>
+      <h3> Selecciona el presupuesto de tu preferencia, si necesitas algo mas especializado favor de contactarse con nosotros</h3>
+      <Container bg='dark' className="mt-3 p-5">
+
+        <Form onSubmit={addTask}>
+          <Form.Group controlId="Navbar" onChange={(text) => setPresupuesto(text.target.value)} >
+            <h5> Barra de navegacion </h5>
+            <div key={`inline-radio`} className="mb-3 d-flex justify-content-between" >
+              <Form.Check inline label="Modo obscuro" name="group1" type='radio' id={`inline--1`} value="600" />
+              <Form.Check inline label="Barra de busqueda" name="group1" type='radio' id={`inline--2`} value="400" />
+              <Form.Check inline label="Logo empresa" name="group1" type='radio' id={`inline--3`} value="300" />
+              <Form.Check inline label="Login" name="group1" type='radio' id={`inline--4`} value="450" />
+            </div>
+          </Form.Group>
+
+          <Form.Group controlId="encabezado" onChange={(text) => setPresupuesto2(text.target.value)} >
+            <h5> Elementos del encabezado </h5>
+
+            <div key={`inline-radio`} className="mb-3 d-flex justify-content-between" >
+              <Form.Check inline label="Banner" name="group2" type='radio' id={`inline--1`} value="700" />
+              <Form.Check inline label="Slider" name="group2" type='radio' id={`inline--2`} value="400" />
+              <Form.Check inline label="Descripcion" name="group2" type='radio' id={`inline--3`} value="200" />
+              <Form.Check inline label="Call action" name="group2" type='radio' id={`inline--4`} value="340" />
+            </div>
+
+          </Form.Group>
+
+          <Form.Group controlId="Cuerpo" onChange={(text) => setPresupuesto3(text.target.value)} >
+            <h5>Elementos del Body </h5>
+            <div key={`inline-radio`} className="mb-3 d-flex justify-content-between">
+              <Form.Check inline label="Formulario" name="group3" type='radio' id={`inline--1`} value="600" />
+              <Form.Check inline label="Carrusel de imagenes" name="group3" type='radio' id={`inline--2`} value="250" />
+              <Form.Check inline label="Cards" name="group3" type='radio' id={`inline--3`} value="150" />
+              <Form.Check inline label="ScrollSpy" name="group3" type='radio' id={`inline--4`} value="80" />
+            </div>
+          </Form.Group>
+
+          <Form.Group controlId="Footer" onChange={(text) => setPresupuesto4(text.target.value)} >
+            <h5>Elementos del Footer</h5>
+            <div key={`inline-radio`} className="mb-3 d-flex justify-content-between">
+              <Form.Check inline label="Redes Sociales" name="group4" type='radio' id={`inline--1`} value="130" />
+              <Form.Check inline label="Enlaces" name="group4" type='radio' id={`inline--2`} value="50" />
+              <Form.Check inline label="Mapa" name="group4" type='radio' id={`inline--3`} value="120" />
+              <Form.Check inline label="Politicas de Privacidad" name="group4" type='radio' id={`inline--4`} value="140" />
+            </div>
+          </Form.Group>
+
+          <Form.Group controlId="BD" onChange={(text) => setPresupuesto5(text.target.value)} >
+            <h5>Tipo de Base de datos</h5>
+            <div key={`inline-radio`} className="mb-3 d-flex justify-content-between">
+              <Form.Check inline label="MondoDB" name="group5" type='radio' id={`inline--1`} value="400" />
+              <Form.Check inline label="MySQL" name="group5" type='radio' id={`inline--2`} value="350" />
+              <Form.Check inline label="Firebase" name="group5" type='radio' id={`inline--3`} value="400" />
+              <Form.Check inline label="SQLite" name="group5" type='radio' id={`inline--4`} value="350" />
+            </div>
+          </Form.Group>
+
+          <Form.Group controlId="Framework" onChange={(text) => setPresupuesto6(text.target.value)} >
+            <h5>Framework a utilizar</h5>
+            <div key={`inline-radio`} className="mb-3 d-flex justify-content-between">
+              <Form.Check inline label="Laravel" name="group6" type='radio' id={`inline--1`} value={500} />
+              <Form.Check inline label="React" name="group6" type='radio' id={`inline--2`} value={650} />
+              <Form.Check inline label="Symfony" name="group6" type='radio' id={`inline--3`} value={500} />
+              <Form.Check inline label="Python" name="group6" type='radio' id={`inline--4`} value={700} />
+            </div>
+          </Form.Group>
+
+          <Form.Group controlId="BDplace" onChange={(text) => setPresupuesto7(text.target.value)} >
+            <h5>Hosting de base de datos </h5>
+            <div key={`inline-radio`} className="mb-3 d-flex justify-content-between">
+              <Form.Check inline label="Hostinger" name="group7" type='radio' id={`inline--1`} value={20} />
+              <Form.Check inline label="GoDaddy" name="group7" type='radio' id={`inline--2`} value={30} />
+              <Form.Check inline label="Goodle Cloud" name="group7" type='radio' id={`inline--3`} value={40} />
+            </div>
+          </Form.Group>
+
+          <Button type="submit" variant="secondary"> Enviar presupuesto </Button>
+        </Form>
+        <br />
+        <Nav.Link href='/presupuesto/mio'> Ver los presupuestos </Nav.Link>
+        <br />
+        <br />
+        <br />
+      </Container>
+    </div>
+  );
+}
+
+export default Presupuesto
